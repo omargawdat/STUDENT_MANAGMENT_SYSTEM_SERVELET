@@ -14,12 +14,15 @@
             border: 1px solid #ddd;
             border-radius: 5px;
         }
+
         .search-card, .add-card, .students-table {
-            box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
         }
+
         .header-spacing {
             margin-bottom: 2rem;
         }
+
         .button-spacing {
             margin-left: 8px;
         }
@@ -37,7 +40,8 @@
         <form action="students" method="get" class="form-inline mb-3">
             <input type="hidden" name="action" value="searchByName"/>
             <div class="form-group mr-2">
-                <input type="text" id="firstName" name="firstName" class="form-control" placeholder="First name" required/>
+                <input type="text" id="firstName" name="firstName" class="form-control" placeholder="First name"
+                       required/>
             </div>
             <button type="submit" class="btn btn-primary button-spacing">Search by Name</button>
             <a href="students?action=list" class="btn btn-outline-secondary button-spacing">Clear</a>

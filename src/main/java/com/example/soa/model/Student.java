@@ -1,11 +1,10 @@
 package com.example.soa.model;
+
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 
 @XmlRootElement
 public class Student {
-    public static int lastId = 0; // Static field to hold the last used ID
-
     private String id;
     private String firstName;
     private String gender;
@@ -17,7 +16,8 @@ public class Student {
     public Student() {
     }
 
-    public Student(String firstName, String gender, String level, String address, double gpa) {
+    public Student(String id, String firstName, String gender, String level, String address, double gpa) {
+        this.id = id;
         this.firstName = firstName;
         this.gender = gender;
         this.level = level;
@@ -75,10 +75,5 @@ public class Student {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    // Static method to set lastId, useful if you're loading existing IDs from storage
-    public static void setLastId(int lastId) {
-        Student.lastId = lastId;
     }
 }

@@ -39,12 +39,10 @@ public class StudentServlet extends HttpServlet {
                 request.getRequestDispatcher("/WEB-INF/addStudent.jsp").forward(request, response);
                 break;
             case "searchByName":
-                // Search students by first name
                 String firstName = request.getParameter("firstName");
-                Student student = XMLUtility.searchStudentByFirstName(firstName);
-                request.setAttribute("students", student != null ? List.of(student) : List.of());
+                List<Student> studentss = XMLUtility.searchStudentByFirstName(firstName);
+                request.setAttribute("students", studentss);
                 request.getRequestDispatcher("/WEB-INF/students.jsp").forward(request, response);
-                break;
             case "filterByGpa":
                 // Filter students by GPA
                 double gpa = parseGpa(request.getParameter("gpa"));
@@ -80,21 +78,19 @@ public class StudentServlet extends HttpServlet {
 
         if ("add".equals(action)) {
             // Retrieve all student-related parameters
+            String[] ids = request.getParameterValues("id");
             String[] firstNames = request.getParameterValues("firstName");
             String[] gpas = request.getParameterValues("gpa");
             String[] genders = request.getParameterValues("gender");
             String[] addresses = request.getParameterValues("address");
             String[] levels = request.getParameterValues("level");
 
+
             for (int i = 0; i < firstNames.length; i++) {
                 try {
-                    // Generate a new unique ID for the student
-                    String newId = XMLUtility.generateNewStudentId(); // This method needs to be implemented to handle ID generation
-
                     double gpa = Double.parseDouble(gpas[i]);
-                    Student student = new Student(firstNames[i], genders[i], levels[i], addresses[i], gpa);
-                    student.setId(newId); // Set the newly generated ID
-                    XMLUtility.addStudentToUniversity(student); // Add student to XML storage
+                    Student student = new Student(ids[i], firstNames[i], genders[i], levels[i], addresses[i], gpa);
+                    XMLUtility.addStudentToUniversity(student);
                 } catch (NumberFormatException e) {
                     // Handle the individual parsing error for each student
                     // Redirect to an error page or show error message

@@ -11,21 +11,25 @@
         .container {
             margin-top: 20px;
         }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         fieldset {
             margin-top: 20px;
             padding: 20px;
             border: 1px solid #ddd;
             border-radius: 5px;
         }
+
         legend {
             width: auto;
             padding: 0 5px;
             font-size: 1.1em;
             font-weight: bold;
         }
+
         .btn-custom {
             margin-right: 5px;
         }
@@ -39,6 +43,11 @@
         <c:forEach begin="1" end="${numStudents}" varStatus="loop">
             <fieldset>
                 <legend>Student ${loop.index}</legend>
+                <!-- ID -->
+                <div class="form-group">
+                    <label for="student-${loop.index}-ID">ID:</label>
+                    <input type="text" class="form-control" name="id" placeholder="Enter ID" required/>
+                </div>
                 <!-- First Name -->
                 <div class="form-group">
                     <label for="student-${loop.index}-firstName">First Name:</label>

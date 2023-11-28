@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class XMLUtility {
-    private static final String FILE_PATH = "/Users/omar/My Docus/Projects/Dummy/Java/SOA_ASSIG_JSP_12/SOA/src/main/university.xml";
+    private static final String FILE_PATH = "/Users/omar/Main/Projects/Dummy/Java/SOA_ASSIG_JSP_12/SOA/src/main/university.xml";
 
     public static void marshalUniversity(University university) {
         try {
@@ -69,16 +69,16 @@ public class XMLUtility {
         }
     }
 
-    public static Student searchStudentByFirstName(String firstName) {
+    public static List<Student> searchStudentByFirstName(String firstName) {
         University university = unmarshalUniversity();
         if (university != null && university.getStudents() != null) {
             return university.getStudents().stream()
                     .filter(student -> student.getFirstName().equalsIgnoreCase(firstName))
-                    .findFirst()
-                    .orElse(null);
+                    .collect(Collectors.toList());
         }
-        return null;
+        return new ArrayList<>();
     }
+
 
     public static List<Student> searchStudentByGPA(double gpa) {
         University university = unmarshalUniversity();
@@ -93,13 +93,6 @@ public class XMLUtility {
     public static List<Student> getAllStudents() {
         University university = unmarshalUniversity();
         return university != null ? university.getStudents() : new ArrayList<>();
-    }
-
-    public static String generateNewStudentId() {
-        int lastId = Student.lastId;
-        lastId++;
-        Student.setLastId(lastId);
-        return String.valueOf(lastId);
     }
 
 }
