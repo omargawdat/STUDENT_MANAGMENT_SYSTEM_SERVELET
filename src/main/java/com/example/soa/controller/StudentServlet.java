@@ -50,11 +50,79 @@ public class StudentServlet extends HttpServlet {
                 request.setAttribute("students", filteredStudents);
                 request.getRequestDispatcher("/WEB-INF/students.jsp").forward(request, response);
                 break;
+            case "searchById":
+                String id = request.getParameter("id");
+                List<Student> studentsById = XMLUtility.searchStudentById(id);
+                request.setAttribute("students", studentsById);
+                request.getRequestDispatcher("/WEB-INF/students.jsp").forward(request, response);
+                break;
+
+            case "searchByGender":
+                String gender = request.getParameter("gender");
+                List<Student> studentsByGender = XMLUtility.searchStudentByGender(gender);
+                request.setAttribute("students", studentsByGender);
+                request.getRequestDispatcher("/WEB-INF/students.jsp").forward(request, response);
+                break;
+
+            case "searchByLevel":
+                String level = request.getParameter("level");
+                List<Student> studentsByLevel = XMLUtility.searchStudentByLevel(level);
+                request.setAttribute("students", studentsByLevel);
+                request.getRequestDispatcher("/WEB-INF/students.jsp").forward(request, response);
+                break;
+
+            case "searchByAddress":
+                String address = request.getParameter("address");
+                List<Student> studentsByAddress = XMLUtility.searchStudentByAddress(address);
+                request.setAttribute("students", studentsByAddress);
+                request.getRequestDispatcher("/WEB-INF/students.jsp").forward(request, response);
+                break;
+            case "edit":
+                String studentId = request.getParameter("studentId");
+                Student studentToEdit = XMLUtility.getStudentById(studentId);
+                if (studentToEdit != null) {
+                    request.setAttribute("studentToEdit", studentToEdit);
+                    request.getRequestDispatcher("/WEB-INF/editStudent.jsp").forward(request, response);
+                }
+                break;
             case "list":
             default:
                 // List all students
                 List<Student> students = XMLUtility.getAllStudents();
                 request.setAttribute("students", students);
+                request.getRequestDispatcher("/WEB-INF/students.jsp").forward(request, response);
+                break;
+            case "sort":
+                String field = request.getParameter("field");
+                String order = request.getParameter("order");
+                List<Student> sortedStudents = null;
+
+                switch (field) {
+                    case "id":
+                        sortedStudents = XMLUtility.sortStudentsById(order);
+                        break;
+                    case "firstName":
+                        sortedStudents = XMLUtility.sortStudentsByName(order);
+                        break;
+                    case "gender":
+                        sortedStudents = XMLUtility.sortStudentsByGender(order);
+                        break;
+                    case "level":
+                        sortedStudents = XMLUtility.sortStudentsByLevel(order);
+                        break;
+                    case "address":
+                        sortedStudents = XMLUtility.sortStudentsByAddress(order);
+                        break;
+                    case "gpa":
+                        sortedStudents = XMLUtility.sortStudentsByGpa(order);
+                        break;
+                    default:
+                        break;
+                }
+
+                if (sortedStudents != null) {
+                    request.setAttribute("students", sortedStudents);
+                }
                 request.getRequestDispatcher("/WEB-INF/students.jsp").forward(request, response);
                 break;
         }
@@ -101,6 +169,30 @@ public class StudentServlet extends HttpServlet {
             // Delete student action
             String studentId = request.getParameter("studentId");
             XMLUtility.deleteStudentById(studentId);
+            response.sendRedirect("students");
+        } else if ("edit".equals(action)) {
+            // Edit student action
+            String studentId = request.getParameter("studentId");
+            String firstName = request.getParameter("firstName");
+            String gender = request.getParameter("gender");
+            String level = request.getParameter("level");
+            String address = request.getParameter("address");
+            String gpaStr = request.getParameter("gpa");
+            double gpa = 0;
+
+            try {
+                gpa = Double.parseDouble(gpaStr);
+            } catch (NumberFormatException e) {
+                // Handle the parsing error for GPA
+                // Redirect to an error page or show error message
+            }
+
+            Student student = new Student(studentId, firstName, gender, level, address, gpa);
+
+            // Update the student in the XML database
+            XMLUtility.updateStudent(student);
+
+            // Redirect to the students list or appropriate page
             response.sendRedirect("students");
         }
     }

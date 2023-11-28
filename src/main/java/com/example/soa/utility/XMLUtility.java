@@ -104,4 +104,153 @@ public class XMLUtility {
         }
         return false;
     }
+
+    public static Student getStudentById(String studentId) {
+        University university = unmarshalUniversity();
+        if (university != null && university.getStudents() != null) {
+            return university.getStudents().stream()
+                    .filter(student -> student.getId().equals(studentId))
+                    .findFirst()
+                    .orElse(null);
+        }
+        return null;
+    }
+
+    public static void updateStudent(Student studentToUpdate) {
+        University university = unmarshalUniversity();
+
+        if (university != null && university.getStudents() != null) {
+            List<Student> students = university.getStudents();
+            for (Student existingStudent : students) {
+                if (existingStudent.getId().equals(studentToUpdate.getId())) {
+                    existingStudent.setFirstName(studentToUpdate.getFirstName());
+                    existingStudent.setGender(studentToUpdate.getGender());
+                    existingStudent.setLevel(studentToUpdate.getLevel());
+                    existingStudent.setAddress(studentToUpdate.getAddress());
+                    existingStudent.setGpa(studentToUpdate.getGpa());
+                    break;
+                }
+            }
+            marshalUniversity(university);
+        }
+    }
+
+    public static List<Student> searchStudentById(String id) {
+        University university = unmarshalUniversity();
+        if (university != null && university.getStudents() != null) {
+            return university.getStudents().stream()
+                    .filter(student -> student.getId().equals(id))
+                    .collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
+
+    public static List<Student> searchStudentByGender(String gender) {
+        University university = unmarshalUniversity();
+        if (university != null && university.getStudents() != null) {
+            return university.getStudents().stream()
+                    .filter(student -> student.getGender().equalsIgnoreCase(gender))
+                    .collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
+    public static List<Student> searchStudentByLevel(String level) {
+        University university = unmarshalUniversity();
+        if (university != null && university.getStudents() != null) {
+            return university.getStudents().stream()
+                    .filter(student -> student.getLevel().equalsIgnoreCase(level))
+                    .collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
+    public static List<Student> searchStudentByAddress(String address) {
+        University university = unmarshalUniversity();
+        if (university != null && university.getStudents() != null) {
+            return university.getStudents().stream()
+                    .filter(student -> student.getAddress().equalsIgnoreCase(address))
+                    .collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
+    public static List<Student> sortStudentsByName(String order) {
+        University university = unmarshalUniversity();
+        if (university != null && university.getStudents() != null) {
+            List<Student> sortedStudents = university.getStudents().stream()
+                    .sorted((s1, s2) -> "asc".equals(order) ? s1.getFirstName().compareTo(s2.getFirstName()) : s2.getFirstName().compareTo(s1.getFirstName()))
+                    .collect(Collectors.toList());
+            university.setStudents(sortedStudents); // Update the students list in the University object
+            marshalUniversity(university); // Write the updated University object back to the XML file
+            return sortedStudents;
+        }
+        return new ArrayList<>();
+    }
+
+    public static List<Student> sortStudentsById(String order) {
+        University university = unmarshalUniversity();
+        if (university != null && university.getStudents() != null) {
+            List<Student> sortedStudents = university.getStudents().stream()
+                    .sorted((s1, s2) -> "asc".equals(order) ? s1.getId().compareTo(s2.getId()) : s2.getId().compareTo(s1.getId()))
+                    .collect(Collectors.toList());
+            university.setStudents(sortedStudents);
+            marshalUniversity(university);
+            return sortedStudents;
+        }
+        return new ArrayList<>();
+    }
+
+    public static List<Student> sortStudentsByGender(String order) {
+        University university = unmarshalUniversity();
+        if (university != null && university.getStudents() != null) {
+            List<Student> sortedStudents = university.getStudents().stream()
+                    .sorted((s1, s2) -> "asc".equals(order) ? s1.getGender().compareTo(s2.getGender()) : s2.getGender().compareTo(s1.getGender()))
+                    .collect(Collectors.toList());
+            university.setStudents(sortedStudents);
+            marshalUniversity(university);
+            return sortedStudents;
+        }
+        return new ArrayList<>();
+    }
+
+    public static List<Student> sortStudentsByLevel(String order) {
+        University university = unmarshalUniversity();
+        if (university != null && university.getStudents() != null) {
+            List<Student> sortedStudents = university.getStudents().stream()
+                    .sorted((s1, s2) -> "asc".equals(order) ? s1.getLevel().compareTo(s2.getLevel()) : s2.getLevel().compareTo(s1.getLevel()))
+                    .collect(Collectors.toList());
+            university.setStudents(sortedStudents);
+            marshalUniversity(university);
+            return sortedStudents;
+        }
+        return new ArrayList<>();
+    }
+
+    public static List<Student> sortStudentsByAddress(String order) {
+        University university = unmarshalUniversity();
+        if (university != null && university.getStudents() != null) {
+            List<Student> sortedStudents = university.getStudents().stream()
+                    .sorted((s1, s2) -> "asc".equals(order) ? s1.getAddress().compareTo(s2.getAddress()) : s2.getAddress().compareTo(s1.getAddress()))
+                    .collect(Collectors.toList());
+            university.setStudents(sortedStudents);
+            marshalUniversity(university);
+            return sortedStudents;
+        }
+        return new ArrayList<>();
+    }
+
+    public static List<Student> sortStudentsByGpa(String order) {
+        University university = unmarshalUniversity();
+        if (university != null && university.getStudents() != null) {
+            List<Student> sortedStudents = university.getStudents().stream()
+                    .sorted((s1, s2) -> "asc".equals(order) ? Double.compare(s1.getGpa(), s2.getGpa()) : Double.compare(s2.getGpa(), s1.getGpa()))
+                    .collect(Collectors.toList());
+            university.setStudents(sortedStudents);
+            marshalUniversity(university);
+            return sortedStudents;
+        }
+        return new ArrayList<>();
+    }
 }
