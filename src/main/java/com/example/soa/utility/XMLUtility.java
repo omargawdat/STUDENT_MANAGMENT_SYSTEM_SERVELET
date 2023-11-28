@@ -6,6 +6,7 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
+
 import java.util.List;
 
 import java.io.*;
@@ -95,4 +96,12 @@ public class XMLUtility {
         return university != null ? university.getStudents() : new ArrayList<>();
     }
 
+    public static boolean doesStudentIdExist(String studentId) {
+        University university = unmarshalUniversity();
+        if (university != null && university.getStudents() != null) {
+            return university.getStudents().stream()
+                    .anyMatch(student -> student.getId().equals(studentId));
+        }
+        return false;
+    }
 }

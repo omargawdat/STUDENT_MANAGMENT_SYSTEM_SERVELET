@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Students</title>
@@ -34,6 +35,52 @@
             margin-right: 5px;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('input[name="id"]').on('blur', function() {
+                var studentId = $(this).val();
+                var currentInputField = $(this);
+
+                if (!studentId) {
+                    return; // Exit if no ID is entered
+                }
+
+                // Check for duplicate IDs within the form
+                var isDuplicate = false;
+                $('input[name="id"]').not(currentInputField).each(function() {
+                    if ($(this).val() === studentId) {
+                        isDuplicate = true;
+                        return false; // Break the loop
+                    }
+                });
+
+                if (isDuplicate) {
+                    alert('Duplicate ID detected in the form. Please use unique IDs for each student.');
+                    currentInputField.val('');
+                    currentInputField.focus();
+                    return;
+                }
+
+                $.ajax({
+                    url: 'CheckStudentId',
+                    type: 'GET',
+                    data: { id: studentId },
+                    success: function(response) {
+                        if (response === 'exists') {
+                            alert('This ID already exists. Please use a different ID.');
+                            currentInputField.val('');
+                            currentInputField.focus();
+                        }
+                    },
+                    error: function() {
+                        alert('Error checking student ID. Please try again.');
+                    }
+                });
+            });
+        });
+    </script>
+
 </head>
 <body>
 <div class="container">
@@ -51,7 +98,7 @@
                 <!-- First Name -->
                 <div class="form-group">
                     <label for="student-${loop.index}-firstName">First Name:</label>
-                    <input type="text" class="form-control" name="firstName" placeholder="Enter first name" required/>
+                    <input type="text" class="form-control" name="firstName" placeholder="Enter first name" pattern="[A-Za-z]+" title="First name should only contain letters." required/>
                 </div>
                 <!-- Gender -->
                 <div class="form-group">
@@ -70,12 +117,12 @@
                 <!-- Address -->
                 <div class="form-group">
                     <label for="student-${loop.index}-address">Address:</label>
-                    <input type="text" class="form-control" name="address" placeholder="Enter address" required/>
+                    <input type="text" class="form-control" name="address" placeholder="Enter address" pattern="[A-Za-z\s]+" title="Address should only contain letters and spaces." required/>
                 </div>
                 <!-- GPA -->
                 <div class="form-group">
                     <label for="student-${loop.index}-gpa">GPA:</label>
-                    <input type="text" class="form-control" name="gpa" placeholder="Enter GPA" required/>
+                    <input type="number" class="form-control" name="gpa" placeholder="Enter GPA" min="0" max="4" step="0.01" required title="GPA must be a number between 0 and 4"/>
                 </div>
             </fieldset>
         </c:forEach>
@@ -85,7 +132,6 @@
         </div>
     </form>
 </div>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>

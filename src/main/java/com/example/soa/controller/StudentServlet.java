@@ -100,10 +100,9 @@ public class StudentServlet extends HttpServlet {
         } else if ("delete".equals(action)) {
             // Delete student action
             String studentId = request.getParameter("studentId");
-            // print the student id with wtf
-            System.out.println("WTF Deleting student with ID: " + studentId); // Logging the ID for debugging
             XMLUtility.deleteStudentById(studentId);
             response.sendRedirect("students");
         }
     }
 }
+
